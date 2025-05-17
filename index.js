@@ -5,7 +5,10 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
 import merchantRoutes from './src/routes/merchantRoutes.js';
+// ✅ Import the new auth routes
 import authRoutes from './src/routes/authRoutes.js';
+import productRoutes from './src/routes/productRoutes.js';
+import { errorHandler, notFound } from './src/middleware/errorMiddleware.js';
 
 const app = express();
 
@@ -21,11 +24,16 @@ app.get('/', (req, res) => {
 });
 
 
-
+// ✅ Register login routes
 app.use('/api/auth', authRoutes);
 app.use('/api/merchants', merchantRoutes);
+app.use('/api/products', productRoutes);
 
 
+app.use(notFound);
+app.use(errorHandler);
+
+// Start Server
 const PORT = process.env.PORT || 5000;
 connectDB()
   .then(() => {

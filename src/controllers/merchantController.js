@@ -42,7 +42,7 @@ export const addMerchant = async (req, res) => {
 };
 export const getAllMerchants = async (req, res) => {
   try {
-    const merchants = await Merchant.find().select('-password'); 
+    const merchants = await Merchant.find().select('-password'); // exclude password field
     res.status(200).json({ success: true, merchants });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to fetch merchants', error });

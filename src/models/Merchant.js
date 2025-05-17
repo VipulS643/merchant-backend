@@ -5,7 +5,7 @@ const merchantSchema = new mongoose.Schema({
   name: { type: String, required: true },
   phone: { type: String, required: true },
   storeLocation: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },  // Optional: email for merchant login
   password: { type: String, required: true },
 });
 
