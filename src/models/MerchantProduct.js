@@ -8,7 +8,7 @@ const merchantProductSchema = new mongoose.Schema({
   },
   product: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product', // from global collection
+    ref: 'Product', 
     required: true,
   },
   price: {
@@ -19,7 +19,7 @@ const merchantProductSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  description: String, // optional merchant-specific description
+  description: String, 
 });
 
 export default mongoose.model('MerchantProduct', merchantProductSchema);

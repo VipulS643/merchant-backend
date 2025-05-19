@@ -1,5 +1,6 @@
 import Merchant from '../models/Merchant.js';
-import generateToken from '../../utils/generateToken.js';
+import { generateToken, generateRefreshToken } from '../../utils/generateToken.js';
+
 
 // Admin login controller
 export const adminLogin = async (req, res) => {
@@ -10,11 +11,15 @@ export const adminLogin = async (req, res) => {
     password === process.env.ADMIN_PASSWORD
   ) {
     const token = generateToken('admin-id', 'admin');
+    const refreshToken = generateRefreshToken('admin-id', 'admin');
+
     return res.status(200).json({
       success: true,
       message: 'Admin logged in successfully',
       token,
+      refreshToken,
       role: 'admin',
+      adminId: 'admin-id',
     });
   }
 
@@ -26,30 +31,22 @@ export const adminLogin = async (req, res) => {
 
 // Merchant login controller
 export const merchantLogin = async (req, res) => {
-   console.log('req.body:', req.body);
   const { email, password } = req.body;
+  const merchant = await Merchant.findOne({ email });
 
-  try {
-    const merchant = await Merchant.findOne({ email });
-    if (!merchant || !(await merchant.matchPassword(password))) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid merchant credentials',
-      });
-    }
-
-    const token = generateToken(merchant._id, 'merchant');
-    return res.status(200).json({
-      success: true,
-      message: 'Merchant logged in successfully',
-      token,
-      role: 'merchant',
-      merchantId: merchant._id,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Server error during merchant login',
-    });
+  if (!merchant || !(await merchant.matchPassword(password))) {
+    return res.status(401).json({ success: false, message: 'Invalid credentials' });
   }
+
+  const token = generateToken(merchant._id, 'merchant');
+  const refreshToken = generateRefreshToken(merchant._id, 'merchant');
+
+  res.status(200).json({
+    success: true,
+    message: 'Login successful',
+    token,
+    refreshToken,
+    role: 'merchant',
+    merchantId: merchant._id,
+  });
 };

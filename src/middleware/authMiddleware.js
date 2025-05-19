@@ -1,9 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-/**
- * Middleware: Verifies any JWT token (merchant or admin).
- * Adds decoded payload to req.user.
- */
 export const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ success: false, message: 'No token provided' });
@@ -17,10 +13,6 @@ export const verifyToken = (req, res, next) => {
   }
 };
 
-/**
- * Middleware: Verifies admin token and role.
- * Use this alone if route is admin-only (replaces verifyToken + isAdmin).
- */
 export const verifyAdmin = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
@@ -39,10 +31,6 @@ export const verifyAdmin = (req, res, next) => {
   }
 };
 
-/**
- * Middleware: Use after verifyToken, ensures user is admin.
- * Useful when chaining multiple middlewares.
- */
 export const isAdmin = (req, res, next) => {
   if (req.user?.role !== 'admin') {
     return res.status(403).json({ success: false, message: 'Access denied. Admins only.' });

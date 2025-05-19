@@ -1,11 +1,14 @@
 
-import pkg from 'jsonwebtoken';
-const { sign } = pkg;
+import jwt from 'jsonwebtoken';
 
-const generateToken = (id, role) => {
-  return sign({ id, role }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+export const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN || '15m', // short-lived
   });
 };
 
-export default generateToken;
+export const generateRefreshToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.REFRESH_SECRET, {
+    expiresIn: process.env.REFRESH_EXPIRES_IN || '7d', // long-lived
+  });
+};

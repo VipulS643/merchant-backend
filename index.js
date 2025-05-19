@@ -8,7 +8,9 @@ import merchantRoutes from './src/routes/merchantRoutes.js';
 // ✅ Import the new auth routes
 import authRoutes from './src/routes/authRoutes.js';
 import productRoutes from './src/routes/productRoutes.js';
+import merchantProductRoutes from './src/routes/merchantProductRoutes.js';
 import { errorHandler, notFound } from './src/middleware/errorMiddleware.js';
+import offerRoutes from './src/routes/offerRoutes.js';
 
 const app = express();
 
@@ -17,6 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+app.use(express.urlencoded({ extended: true }));
 
 // Default route
 app.get('/', (req, res) => {
@@ -28,7 +31,8 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/merchants', merchantRoutes);
 app.use('/api/products', productRoutes);
-
+app.use('/api/merchantProducts', merchantProductRoutes);
+app.use('/api/offers', offerRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
